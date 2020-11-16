@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
-from app import app
+from app import app, db
 from app.forms import RegistrationForm, LoginForm
 from app.models import User, Post
 
@@ -14,8 +14,19 @@ def index():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', category='success')
-        return redirect(url_for('login'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None:
+            username = form.username.data
+            email = form.email.data
+            password = form.password.data
+            user = User(username=username, email=email, password=password)
+            db.session.add(user)
+            db.session.commit()
+            flash(f'Account created for {form.username.data}!', category='success')
+            return redirect(url_for('login'))
+        else:
+            flash(f'Account created for {form.username.data}!', category='warning')
+            return redirect(url_for('register'))
     return render_template('register.html', title='Register', form=form)
 
 
@@ -23,7 +34,8 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'test@gmail.com' and form.password.data == '1111':
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.password == form.password.data:
             flash('You have been logged in!', category='success')
             return redirect(url_for('index'))
         else:
