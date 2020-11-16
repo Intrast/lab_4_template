@@ -1,15 +1,25 @@
-<html>
-  <head>
-    {% if title %}
-    <title>{{title}} - microblog</title>
-    {% else %}
-    <title>microblog</title>
-    {% endif %}
-  </head>
-  <body>
-    <h1>Hi, {{user.nickname}}!</h1>
-    {% for post in posts %}
-    <h1>{{post.author.nickname}}</h1> says: <b>{{post.body}}</b></p>
-    {% endfor %}
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+
+{% for cat, msg in get_flashed_messages(True) %}
+<ul class="list-group">
+    <li class="list-group-item list-group-item-{{cat}}">{{msg}}</li>
+</ul>
+{%endfor %}
+
+
+
+{% from "_render_field.html" import render_field %}
+
+<div class="container">
+    <div class="card" style="width: 500px; margin: auto">
+        <div class="card-body">
+          <h1>Hi, {{user.nickname}}!</h1>
+          {% for post in posts %}
+            <h1>{{post.author.nickname}}</h1> says: <b>{{post.body}}</b></p>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
