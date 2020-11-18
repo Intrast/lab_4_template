@@ -3,3 +3,11 @@
     border: 1px solid #258ae0;
     color: #258ae0;
 }
+
+.display {
+    display: flex;
+}
+
+.center {
+    align-items: center;
+}

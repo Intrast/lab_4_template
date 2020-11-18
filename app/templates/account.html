@@ -1,5 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ current_user.username }}</h1>
+    <div class="container">
+        <div class="card" style="width: 500px; margin: auto">
+            <div class="card-body">
+                <div class="display">
+                    <div>
+                        <img class="rounded-circle account_img" width="60px" src={{ image_file }}>
+                    </div>
+                    <div style="font-size: 15px; margin-left: 10px">
+                        <div>{{ current_user.username }}</div>
+                        <div>{{ current_user.email }}</div>
+                    </div>
+                </div>
+
+                {% from "_render_field.html" import render_field %}
+
+                <h1>Update</h1>
+                <hr style="margin-top: 0">
+                <form id="edit-form" method="post" action="" enctype="multipart/form-data" style="display: block;">
+
+                {{ form.hidden_tag() }}
+
+                   <div class="form-group">
+                        {{ render_field(form.username, class="form-control", placeholder="Username") }}
+                   </div>
+                   <div class="form-group">
+                       {{ render_field(form.email, class="form-control", placeholder="Email Address") }}
+                   </div>
+                    <div class="form-group">
+                       {{ render_field(form.password, class="form-control", placeholder="Password") }}
+                   </div>
+                    <div class="form-group">
+                       {{ render_field(form.confirm_password, class="form-control", placeholder="Confirm Password") }}
+                   </div>
+                    <div class="form-group">
+                       {{ render_field(form.about_me, class="form-control", placeholder="About Me") }}
+                   </div>
+                    <div class="form-group">
+                       {{ render_field(form.last_seen, class="form-control", placeholder="Last Seen") }}
+                   </div>
+
+                    <br>
+                        {{ form.picture.label() }}
+                        {{ form.picture(class="form-control-file") }}
+                        {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                                <span class="text-danger">{{ error }}</span></br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-login login">update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
