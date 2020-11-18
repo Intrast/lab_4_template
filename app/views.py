@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm
 from app.models import User, Post
+from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route('/')
@@ -12,6 +13,8 @@ def index():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -32,16 +35,35 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         password_true = bcrypt.check_password_hash(user.password,  form.password.data)
         if user and password_true:
+            login_user(user, remember=form.remember.data)
             flash('You have been logged in!', category='success')
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
             return redirect(url_for('index'))
         else:
             flash('Login unsuccessful. Please check username and password', category='warning')
     return render_template('login.html', form=form, title='Login')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash('You have been logged out')
+    return redirect(url_for('index'))
+
+
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html', title='Account')
 
 
 @app.route('/posts', methods=['GET', 'POST'])
