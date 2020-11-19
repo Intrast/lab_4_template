@@ -16,7 +16,7 @@
         <div class="card-body">
             <h1>Sign In</h1>
             <hr style="margin-top: 0">
-            <form id="login-form" method="post" action="{{ url_for('login') }}" style="display: block;">
+            <form id="login-form" method="post" action="{{ url_for('login', next=request.args.get('next')) }}" style="display: block;">
 
             {{ form.hidden_tag() }}
 

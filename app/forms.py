@@ -48,11 +48,10 @@ class UpdateAccountForm(FlaskForm):
     about_me = StringField('About Me', validators=[Length(min=4, max=250, message='Це поле має бути довжиною між 4 та 250 символів')])
     password = PasswordField('Password',
                              validators=[Length(min=6,
-                                                message='Це поле має бути довжиною більше 6 символів'),
-                                         DataRequired(message='Це поле обовязкове')])
+                                                message='Це поле має бути довжиною більше 6 символів')])
     confirm_password = PasswordField('Confirm Password',
-                                     validators=[DataRequired(), EqualTo('password')])
-    last_seen = StringField('Last Seen', validators=[Length(min=4, max=60, message='Це поле має бути довжиною між 4 та 60 символів')])
+                                     validators=[EqualTo('password')])
+    last_seen_user = StringField('Last Seen')
     picture = FileField('update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
@@ -66,3 +65,11 @@ class UpdateAccountForm(FlaskForm):
             if User.query.filter_by(email=field.data).first():
                 raise ValidationError('Email already register')
 
+
+class CreatePostForm(FlaskForm):
+    title = StringField('Title',
+                        validators=[Length(min=4, max=25, message='Це поле має бути довжиною між 4 та 25 символів'),
+                                    DataRequired(message='Це поле обовязкове')])
+    content = StringField('Content',
+                          validators=[Length(min=4, max=100, message='Це поле має бути довжиною між 4 та 100 символів'),
+                                      DataRequired(message='Це поле обовязкове')])

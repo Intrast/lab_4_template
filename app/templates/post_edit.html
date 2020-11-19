@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for cat, msg in get_flashed_messages(True) %}
+<ul class="list-group">
+    <li class="list-group-item list-group-item-{{cat}}">{{msg}}</li>
+</ul>
+{%endfor %}
+
+<div class="container">
+    <div class="card" style="width: 500px; margin: auto">
+        <div class="card-body">
+
+             {% from "_render_field.html" import render_field %}
+
+            <h1>Update</h1>
+            <hr style="margin-top: 0">
+            <form id="edit-form" method="post" action="" enctype="multipart/form-data" style="display: block;">
+
+                {{ form.hidden_tag() }}
+
+               <div class="form-group">
+                    {{ render_field(form.title, class="form-control", placeholder="Title") }}
+               </div>
+               <div class="form-group">
+                   {{ render_field(form.content, class="form-control", placeholder="Content") }}
+               </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-login login">update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
